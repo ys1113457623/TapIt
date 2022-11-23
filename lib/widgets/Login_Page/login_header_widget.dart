@@ -37,7 +37,7 @@ class LoginHeaderWidget extends StatelessWidget {
           sloganLine,
           style: Theme.of(context)
               .textTheme
-              .headline5
+              .headline3
               ?.copyWith(fontWeight: FontWeight.w700, color: Themes.light.primaryColor),
         ),
         SizedBox(

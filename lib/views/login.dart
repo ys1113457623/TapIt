@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tapit/views/Login_Page/gradient_eclipse.dart';
+import 'package:tapit/widgets/Login_Page/gradient_eclipse.dart';
 
-import 'login_footer_widget.dart';
-import 'login_form.dart';
-import 'login_header_widget.dart';
+import '../widgets/Login_Page/login_footer_widget.dart';
+import '../widgets/Login_Page/login_form.dart';
+import '../widgets/Login_Page/login_header_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

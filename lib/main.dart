@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:tapit/theme.dart';
-import 'package:tapit/views/Login_Page/login.dart';
+import 'package:tapit/views/login.dart';
 
 void main() {
   runApp(const MyApp());

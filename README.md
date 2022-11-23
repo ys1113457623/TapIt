@@ -31,11 +31,11 @@
 <br />
 <div align="center">
   <a href="https://github.com/ys1113457623/tapit">
-    <img src="assets/logo/mainlogo.png" alt="Logo" width="80" height="80">
+    <img src="assets/logo/main_logo.png" alt="Logo" width="80" height="80">
   </a>
   <br />
   <a href="https://github.com/ys1113457623/tapit">
-    <img src="assets/logo/logo_underhead.png" alt="Logo" width="80">
+    <img src="assets/logo/logo_underhead_black.png" alt="Logo" width="80">
   </a>
 
   <h3 align="center">One tap solution for all emergency</h3>
