@@ -7,16 +7,16 @@ import '../../constant.dart';
 import '../../controller/LoginController.dart';
 import '../../theme.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignUpFormState extends State<SignUpForm> {
   bool _autoValidate = false;
   final _controller = Get.put(LoginController()); // inject controller
 
@@ -40,7 +40,7 @@ class _LoginFormState extends State<LoginForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              emailAddress,
+              name,
               style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Theme.of(context).primaryColorDark),
             ),
             SizedBox(
@@ -50,21 +50,9 @@ class _LoginFormState extends State<LoginForm> {
               height: 40.h,
               child: TextFormField(
                 controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.name,
                 autocorrect: false,
-                decoration: InputDecoration(
-                    // isCollapsed: true,asfasf
-
-                    // contentPadding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
-                    // prefixIcon: Icon(Icons.person_outline_outlined),
-                    suffixIcon: Icon(
-                      Icons.mail,
-                      size: 25.sp,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    // labelText: tEmail,
-
-                    border: const OutlineInputBorder(gapPadding: 0)),
+                decoration: InputDecoration(border: const OutlineInputBorder(gapPadding: 0)),
                 validator: (value) {
                   if (value == null) {
                     return 'Email  is required';
@@ -73,19 +61,10 @@ class _LoginFormState extends State<LoginForm> {
                 },
               ),
             ),
-            SizedBox(height: 20.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  password,
-                  style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Themes.light.primaryColorDark),
-                ),
-                Text(
-                  forgotPasswor,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Themes.light.primaryColorDark),
-                ),
-              ],
+            SizedBox(height: 10.h),
+            Text(
+              phoneNumber,
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Themes.light.primaryColorDark),
             ),
             SizedBox(
               height: 5.h,
@@ -103,27 +82,56 @@ class _LoginFormState extends State<LoginForm> {
                 }),
                 //  controller: _userPasswordController,
                 obscureText: !_passwordVisible, //This will obscure text dynamically
-                decoration: InputDecoration(
-                    // isCollapsed: true,asfa
-
-                    // Here is key idea
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        // Based on passwordVisible state choose the icon
-                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      onPressed: () {
-                        // Update the state i.e. toogle the state of passwordVisible variable
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
-                    ),
-                    border: const OutlineInputBorder()),
+                decoration: InputDecoration(border: const OutlineInputBorder()),
               ),
             ),
-            SizedBox(height: 30.h),
+            SizedBox(height: 10.h),
+            Text(
+              password,
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Theme.of(context).primaryColorDark),
+            ),
+            SizedBox(height: 5.h),
+            SizedBox(
+              height: 40.h,
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                controller: _passwordController,
+                validator: ((value) {
+                  if (value == null) {
+                    return 'Password is required';
+                  }
+                  return null;
+                }),
+                //  controller: _userPasswordController,
+                obscureText: !_passwordVisible, //This will obscure text dynamically
+                decoration: InputDecoration(border: const OutlineInputBorder()),
+              ),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  termsAndConditions,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2!
+                      .copyWith(color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.w100),
+                )),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                termsAndConditions2,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2!
+                    .copyWith(color: Theme.of(context).canvasColor, fontWeight: FontWeight.w900),
+              ),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -133,23 +141,10 @@ class _LoginFormState extends State<LoginForm> {
                   }
                   return Theme.of(context).highlightColor;
                 })),
-                onPressed: () {},
-                child: Text(tLogin.toUpperCase()),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.green;
-                  }
-                  return Theme.of(context).canvasColor;
-                })),
                 onPressed: () {
                   Get.to(const MapScreen());
                 },
-                child: Text(skip.toUpperCase()),
+                child: Text(contin,style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Theme.of(context).backgroundColor),),
               ),
             ),
           ],

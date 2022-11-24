@@ -12,15 +12,14 @@ class LoginFooterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        
-        
         TextButton(
           onPressed: () {},
           child: Text.rich(
-            TextSpan(
-                text: tDontHaveAnAccount,
-                style: Theme.of(context).textTheme.bodyText1,
-                children: [TextSpan(text: tSignup, style: TextStyle(color: Theme.of(context).primaryColorDark).copyWith(fontWeight: FontWeight.bold))]),
+            TextSpan(text: tDontHaveAnAccount, style: Theme.of(context).textTheme.bodyText1, children: [
+              TextSpan(
+                  text: tSignup,
+                  style: TextStyle(color: Theme.of(context).canvasColor).copyWith(fontWeight: FontWeight.bold))
+            ]),
           ),
         ),
       ],

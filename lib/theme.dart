@@ -6,11 +6,11 @@ class Themes {
   static final dark = ThemeData.dark().copyWith();
   static final light = ThemeData.light().copyWith(
     textTheme: TextTheme(
-      // headline1: TextStyle(
-      //   fontSize: 96.sp,
-      //   fontWeight: FontWeight.w300,
-      //   letterSpacing: -1.5,
-      // ),
+      headline1: TextStyle(
+          fontSize: 34.sp,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -1.5,
+          fontFamily: GoogleFonts.poppins().fontFamily),
       headline2: TextStyle(
           fontSize: 26.sp,
           fontWeight: FontWeight.bold,
@@ -82,7 +82,7 @@ class Themes {
     backgroundColor: const Color(0xffffffff),
     primaryColorDark: const Color(0xff000000),
     primaryColor: const Color(0xffC80000),
-    highlightColor: const Color(0xff99D9D9),
+    highlightColor: const Color(0xff26303C),
     indicatorColor: const Color(0xff0A5587),
     shadowColor: const Color(0xff333333),
     disabledColor: const Color(0xff666666),

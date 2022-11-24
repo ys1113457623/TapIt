@@ -37,11 +37,15 @@ const String tDontHaveAnAccount = "New User? ";
 const String emailAddress = "Email Address";
 const String password = "Password";
 const String forgotPasswor = "Forgot Password";
+const String skip = "Skip";
 // -- Sign Up Screen Text
-const String tSignUpTitle = "Get On Board!";
-const String tSignUpSubTitle = "Create your profile to start your Journey.";
-const String tAlreadyHaveAnAccount = "Already have an Account? ";
-
+const String tSignUpTitle = "Create\nAn Account!";
+const String tsubTitle = "Get Help at time of emergency";
+const String name = "Name";
+const String phoneNumber = "Phone Number";
+const String termsAndConditions = "By continuing you agree to our";
+const String termsAndConditions2 = "Terms of Service and Privacy Policy";
+const String contin = "Countinue";
 // -- Forget Password Text
 const String tForgetPasswordTitle = "Make Selection!";
 const String tForgetPasswordSubTitle = "Select one of the options given below to reset your password.";

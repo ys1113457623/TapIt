@@ -1,9 +1,17 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
     package="com.example.tapit">
    <application
         android:label="tapit"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <provider
+            android:name="com.here.sdk.engine.InitProvider"
+            android:authorities="com.here.sdk.engine.InitProvider"
+            android:exported="false"
+            tools:node="remove" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
