@@ -41,9 +41,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   here_sdk:
     path: plugins/here_sdk
-  geolocator: ^9.0.2
-  geocoding: ^2.0.5
+  # geolocator: ^9.0.2
+  # geocoding: ^2.0.5
   draggable_bottom_sheet: ^1.0.2
+  shared_preferences: ^2.0.15
+  url_launcher: ^6.1.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -71,6 +73,7 @@ flutter:
     - assets/logo/
     - assets/
     - assets/emergency_logo/
+    - assets/markers/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

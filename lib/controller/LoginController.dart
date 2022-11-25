@@ -1,24 +1,53 @@
-// import 'package:get/get.dart';
+import 'dart:convert';
 
-// class LoginController  extends GetxController {
-//   final AuthenticationController _authenticationController = Get.find();
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-//   final _loginStateStream = LoginState().obs;
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tapit/views/map_screen.dart';
 
-//   LoginState get state => _loginStateStream.value;
+import '../constant.dart';
 
-//   void login(String email, String password) async {
-//     _loginStateStream.value = LoginLoading();
+class LoginController extends GetxController {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-//     try{
-//       await _authenticationController.signIn(email, password);
-//       _loginStateStream.value = LoginState();
-//     } on AuthenticationException catch(e){
-//       _loginStateStream.value = LoginFailure(error: e.message);
-//     }
-//   }
-// }
+  Future<void> loginWithEmail() async {
+    var headers = {'Content-Type': 'application/json'};
+    try {
+      var url = Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.authEndpoints.loginEmail);
+      Map body = {'email': emailController.text.trim(), 'password': passwordController.text};
+      http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
 
-import 'package:get/get_state_manager/get_state_manager.dart';
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        if (json['code'] == 0) {
+          var token = json['data']['Token'];
+          final SharedPreferences prefs = await _prefs;
+          await prefs.setString('token', token);
 
-class LoginController extends GetxController {}
+          emailController.clear();
+          passwordController.clear();
+          Get.off(const MapScreen());
+        } else if (json['code'] == 1) {
+          throw jsonDecode(response.body)['message'];
+        }
+      } else {
+        throw jsonDecode(response.body)["Message"] ?? "Unknown Error Occured";
+      }
+    } catch (error) {
+      Get.back();
+      showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return SimpleDialog(
+              title: const Text('Error'),
+              contentPadding: const EdgeInsets.all(20),
+              children: [Text(error.toString())],
+            );
+          });
+    }
+  }
+}

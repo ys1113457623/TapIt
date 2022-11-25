@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:tapit/views/map_screen.dart';
+import 'package:tapit/views/signupPage2.dart';
 
 import '../../constant.dart';
-import '../../controller/LoginController.dart';
+import '../../controller/SignUpController.dart';
 import '../../theme.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -17,18 +17,11 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  bool _autoValidate = false;
-  final _controller = Get.put(LoginController()); // inject controller
+  final controller = Get.put(RegisterationController());
+  final bool _autoValidate = false;
+  // final _controller = Get.put(LoginController()); // inject controller
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
-  final _emailController = TextEditingController();
-  bool _passwordVisible = false;
-  @override
-  void initState() {
-    _passwordVisible = false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -49,10 +42,10 @@ class _SignUpFormState extends State<SignUpForm> {
             SizedBox(
               height: 40.h,
               child: TextFormField(
-                controller: _emailController,
                 keyboardType: TextInputType.name,
+                controller: controller.nameController,
                 autocorrect: false,
-                decoration: InputDecoration(border: const OutlineInputBorder(gapPadding: 0)),
+                decoration: const InputDecoration(border: OutlineInputBorder(gapPadding: 0)),
                 validator: (value) {
                   if (value == null) {
                     return 'Email  is required';
@@ -72,8 +65,9 @@ class _SignUpFormState extends State<SignUpForm> {
             SizedBox(
               height: 40.h,
               child: TextFormField(
-                keyboardType: TextInputType.text,
-                controller: _passwordController,
+                keyboardType: TextInputType.phone,
+                controller: controller.phoneNumberController,
+
                 validator: ((value) {
                   if (value == null) {
                     return 'Password is required';
@@ -81,8 +75,8 @@ class _SignUpFormState extends State<SignUpForm> {
                   return null;
                 }),
                 //  controller: _userPasswordController,
-                obscureText: !_passwordVisible, //This will obscure text dynamically
-                decoration: InputDecoration(border: const OutlineInputBorder()),
+                //This will obscure text dynamically
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
             ),
             SizedBox(height: 10.h),
@@ -94,8 +88,8 @@ class _SignUpFormState extends State<SignUpForm> {
             SizedBox(
               height: 40.h,
               child: TextFormField(
-                keyboardType: TextInputType.text,
-                controller: _passwordController,
+                // keyboardType: TextInputType.p,
+
                 validator: ((value) {
                   if (value == null) {
                     return 'Password is required';
@@ -103,8 +97,8 @@ class _SignUpFormState extends State<SignUpForm> {
                   return null;
                 }),
                 //  controller: _userPasswordController,
-                obscureText: !_passwordVisible, //This will obscure text dynamically
-                decoration: InputDecoration(border: const OutlineInputBorder()),
+                //This will obscure text dynamically
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
             ),
             SizedBox(
@@ -142,9 +136,12 @@ class _SignUpFormState extends State<SignUpForm> {
                   return Theme.of(context).highlightColor;
                 })),
                 onPressed: () {
-                  Get.to(const MapScreen());
+                  Get.to(const SignUpScreen2());
                 },
-                child: Text(contin,style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Theme.of(context).backgroundColor),),
+                child: Text(
+                  contin,
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Theme.of(context).backgroundColor),
+                ),
               ),
             ),
           ],

@@ -1,12 +1,19 @@
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:here_sdk/core.dart';
 
 class LocationController extends GetxController {
-  final longitude = 0.0.obs;
-  final langitude = 0.0.obs;
+  final lat = 28.450849311256952.obs;
+  final long = 77.58427290184594.obs;
 
-  getLocation(Position p) {
-    langitude.value = p.latitude;
-    longitude.value = p.longitude;
+  GeoCoordinates getLocation() {
+    return GeoCoordinates(lat.value, long.value);
   }
+
+  void up(double lati, double lang) {
+    lat.value = lati;
+    long.value = lang;
+
+    update();
+  }
+  // update();
 }

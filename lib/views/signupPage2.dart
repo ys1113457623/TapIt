@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tapit/widgets/Signup_Page/signup_header_widget.dart';
+import 'package:tapit/widgets/Signup_Page2/gradient_eclipse_sign_up2.dart';
+import 'package:tapit/widgets/Signup_Page2/sign_up2_form.dart';
+import 'package:tapit/widgets/Signup_Page2/signup_page2_header.dart';
 
-import '../widgets/Signup_Page/signup_form.dart';
-
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignUpScreen2 extends StatefulWidget {
+  const SignUpScreen2({super.key});
 
   @override
-  State<SignUpScreen> createState() => _LoginScreenState();
+  State<SignUpScreen2> createState() => _SignUpScreen2();
 }
 
-class _LoginScreenState extends State<SignUpScreen> {
+class _SignUpScreen2 extends State<SignUpScreen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Stack(
+        child: Column(
           children: [
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Image.asset("assets/Sign_in.png"),
+            GradientEclipse2(
+              heigt: 120.h,
             ),
             SizedBox(height: 40.h),
             Container(
@@ -29,10 +27,9 @@ class _LoginScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SignUpHeader(),
+                  const SignUpScreen2Header(),
                   SizedBox(height: 20.h),
-                  const SignUpForm(),
-                  // const SignUpFooterWidget(),
+                  const SignUp2Form(),
                 ],
               ),
             ),

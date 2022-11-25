@@ -7,8 +7,6 @@ import 'package:here_sdk/core.errors.dart';
 import 'package:tapit/env.dart';
 import 'package:tapit/theme.dart';
 import 'package:tapit/views/login.dart';
-import 'package:tapit/views/map_screen.dart';
-import 'package:tapit/views/signupPage.dart';
 
 void main() {
   _initializeHERESDK();
@@ -47,7 +45,7 @@ class MyApp extends StatelessWidget {
           darkTheme: Themes.dark,
           themeMode: ThemeMode.light,
           debugShowCheckedModeBanner: false,
-          home: const SignUpScreen(),
+          home: const LoginScreen(),
         );
       },
     );

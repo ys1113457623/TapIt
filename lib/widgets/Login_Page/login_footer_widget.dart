@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tapit/views/signupPage.dart';
 
 import '../../constant.dart';
 
@@ -13,7 +15,9 @@ class LoginFooterWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(const SignUpScreen());
+          },
           child: Text.rich(
             TextSpan(text: tDontHaveAnAccount, style: Theme.of(context).textTheme.bodyText1, children: [
               TextSpan(

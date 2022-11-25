@@ -6,6 +6,7 @@ import 'package:tapit/views/map_screen.dart';
 import '../../constant.dart';
 import '../../controller/LoginController.dart';
 import '../../theme.dart';
+import '../Map_Screen/search.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
@@ -17,12 +18,11 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  bool _autoValidate = false;
-  final _controller = Get.put(LoginController()); // inject controller
+  final bool _autoValidate = false;
+  final controller = Get.put(LoginController());
+  // inject controller
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
-  final _emailController = TextEditingController();
   bool _passwordVisible = false;
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _LoginFormState extends State<LoginForm> {
             SizedBox(
               height: 40.h,
               child: TextFormField(
-                controller: _emailController,
+                controller: controller.emailController,
                 keyboardType: TextInputType.emailAddress,
                 autocorrect: false,
                 decoration: InputDecoration(
@@ -94,7 +94,7 @@ class _LoginFormState extends State<LoginForm> {
               height: 40.h,
               child: TextFormField(
                 keyboardType: TextInputType.text,
-                controller: _passwordController,
+                controller: controller.passwordController,
                 validator: ((value) {
                   if (value == null) {
                     return 'Password is required';
@@ -147,6 +147,8 @@ class _LoginFormState extends State<LoginForm> {
                   return Theme.of(context).canvasColor;
                 })),
                 onPressed: () {
+                  SearchExample? searchExample;
+                  searchExample?.searchHospitalButton();
                   Get.to(const MapScreen());
                 },
                 child: Text(skip.toUpperCase()),

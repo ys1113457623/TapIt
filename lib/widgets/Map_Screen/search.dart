@@ -17,35 +17,39 @@
  * License-Filename: LICENSE
  */
 
-import 'dart:typed_data';
-
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:here_sdk/core.dart';
 import 'package:here_sdk/core.errors.dart';
 import 'package:here_sdk/gestures.dart';
 import 'package:here_sdk/mapview.dart';
 import 'package:here_sdk/search.dart';
 
+import '../../controller/LocationController.dart';
+import 'Routing.dart';
 import 'SearchResultMetadata.dart';
 
 // A callback to notify the hosting widget.
 typedef ShowDialogFunction = void Function(String title, String message);
+final LocationController controller = Get.put(LocationController());
 
 class SearchExample {
-  HereMapController _hereMapController;
-  MapCamera _camera;
+  final HereMapController _hereMapController;
+  final MapCamera _camera;
   MapImage? _poiMapImage;
-  List<MapMarker> _mapMarkerList = [];
+  final List<MapMarker> _mapMarkerList = [];
   late SearchEngine _searchEngine;
-  ShowDialogFunction _showDialog;
+  final ShowDialogFunction _showDialog;
+  final LocationController controller = Get.put(LocationController());
 
   SearchExample(ShowDialogFunction showDialogCallback, HereMapController hereMapController)
       : _showDialog = showDialogCallback,
         _hereMapController = hereMapController,
         _camera = hereMapController.camera {
-    double distanceToEarthInMeters = 1000;
+    double distanceToEarthInMeters = 10000;
     MapMeasure mapMeasureZoom = MapMeasure(MapMeasureKind.distance, distanceToEarthInMeters);
-    _camera.lookAtPointWithMeasure(GeoCoordinates(28.450938907899314, 77.58420852671965), mapMeasureZoom);
+    _camera.lookAtPointWithMeasure(GeoCoordinates(controller.lat.value, controller.long.value), mapMeasureZoom);
 
     try {
       _searchEngine = SearchEngine();
@@ -54,43 +58,31 @@ class SearchExample {
     }
 
     _setTapGestureHandler();
-    _setLongPressGestureHandler();
+    // _setLongPressGestureHandler();
 
-    _showDialog("Note", "Long press on map to get the address for that position using reverse geocoding.");
+    // _showDialog("Note", "Long press on map to get the address for that position using reverse geocoding.");
   }
 
-  Future<void> searchButtonClicked() async {
+  Future<void> searchHospitalButton() async {
     // Search for "Pizza" and show the results on the map.
-    _searchExample();
-
-    // Search for auto suggestions and log the results to the console.
-    _autoSuggestExample();
+    _searching();
   }
 
-  Future<void> geocodeAnAddressButtonClicked() async {
-    // Search for the location that belongs to an address and show it on the map.
-    _geocodeAnAddress();
+  // Future<void> geocodeAnAddressButtonClicked() async {
+  //   // Search for the location that belongs to an address and show it on the map.
+  //   _geocodeAnAddress();
+  // }
+
+  void _searching() {
+    String hospitalSearchTerm = "Hospital";
+    String policeSearchTerm = "Police";
+    String fireSearchTerm = "Fire";
+    _searchInViewport(queryString: hospitalSearchTerm, categoryName: hospitalSearchTerm, color: Colors.red);
+    _searchInViewport(queryString: policeSearchTerm, categoryName: policeSearchTerm, color: Colors.blue);
+    _searchInViewport(queryString: fireSearchTerm, categoryName: fireSearchTerm, color: Colors.orange);
   }
 
-  void _searchExample() {
-    String searchTerm = "Hospital";
-    print("Searching in viewport for: " + searchTerm);
-    _searchInViewport(searchTerm);
-  }
 
-  void _geocodeAnAddress() {
-    // Move map to expected location.
-    GeoCoordinates geoCoordinates = GeoCoordinates(52.53086, 13.38469);
-    double distanceToEarthInMeters = 1000 * 5;
-    MapMeasure mapMeasureZoom = MapMeasure(MapMeasureKind.distance, distanceToEarthInMeters);
-    _camera.lookAtPointWithMeasure(geoCoordinates, mapMeasureZoom);
-
-    String queryString = "Invalidenstraße 116, Berlin";
-
-    print("Finding locations for: $queryString. Tap marker to see the coordinates.");
-
-    _geocodeAddressAtLocation(queryString, geoCoordinates);
-  }
 
   void _setTapGestureHandler() {
     _hereMapController.gestures.tapListener = TapListener((Point2D touchPoint) {
@@ -98,35 +90,7 @@ class SearchExample {
     });
   }
 
-  void _setLongPressGestureHandler() {
-    _hereMapController.gestures.longPressListener = LongPressListener((GestureState gestureState, Point2D touchPoint) {
-      if (gestureState == GestureState.begin) {
-        GeoCoordinates? geoCoordinates = _hereMapController.viewToGeoCoordinates(touchPoint);
-        if (geoCoordinates == null) {
-          return;
-        }
-        _addPoiMapMarker(geoCoordinates);
-        _getAddressForCoordinates(geoCoordinates);
-      }
-    });
-  }
 
-  Future<void> _getAddressForCoordinates(GeoCoordinates geoCoordinates) async {
-    SearchOptions reverseGeocodingOptions = SearchOptions.withDefaults();
-    reverseGeocodingOptions.languageCode = LanguageCode.enGb;
-    reverseGeocodingOptions.maxItems = 1;
-
-    _searchEngine.searchByCoordinates(geoCoordinates, reverseGeocodingOptions,
-        (SearchError? searchError, List<Place>? list) async {
-      if (searchError != null) {
-        _showDialog("Reverse geocoding", "Error: " + searchError.toString());
-        return;
-      }
-
-      // If error is null, list is guaranteed to be not empty.
-      _showDialog("Reverse geocoded address:", list!.first.address.addressText);
-    });
-  }
 
   void _pickMapMarker(Point2D touchPoint) {
     double radiusInPixel = 2;
@@ -136,7 +100,7 @@ class SearchExample {
         return;
       }
       List<MapMarker> mapMarkerList = pickMapItemsResult.markers;
-      if (mapMarkerList.length == 0) {
+      if (mapMarkerList.isEmpty) {
         print("No map markers found.");
         return;
       }
@@ -149,7 +113,7 @@ class SearchExample {
           SearchResultMetadata searchResultMetadata = customMetadataValue as SearchResultMetadata;
           String title = searchResultMetadata.searchResult.title;
           String vicinity = searchResultMetadata.searchResult.address.addressText;
-          _showDialog("Picked Search Result", title + ". Vicinity: " + vicinity);
+          _showDialog("Picked Search Result", "$title. Vicinity: ");
           return;
         }
       }
@@ -160,7 +124,7 @@ class SearchExample {
     });
   }
 
-  Future<void> _searchInViewport(String queryString) async {
+  Future<void> _searchInViewport({required String queryString, String? categoryName, required Color color}) async {
     _clearMap();
 
     GeoBox viewportGeoBox = _getMapViewGeoBox();
@@ -169,125 +133,40 @@ class SearchExample {
 
     SearchOptions searchOptions = SearchOptions.withDefaults();
     searchOptions.languageCode = LanguageCode.enUs;
-    searchOptions.maxItems = 2;
+    searchOptions.maxItems = 1;
+    RoutingExample? routingExample = RoutingExample(_showDialog, _hereMapController);
 
     _searchEngine.searchByText(query, searchOptions, (SearchError? searchError, List<Place>? list) async {
       if (searchError != null) {
-        _showDialog("Search", "Error: " + searchError.toString());
+        _showDialog("Search", "Error: $searchError");
         return;
       }
 
       // If error is null, list is guaranteed to be not empty.
       int listLength = list!.length;
-      _showDialog("Search for $queryString", "Results: $listLength. Tap marker to see details.");
+      // _showDialog("Search for $queryString", "Results: $listLength. Tap marker to see details.");
 
       // Add new marker for each search result on map.
       for (Place searchResult in list) {
         Metadata metadata = Metadata();
         metadata.setCustomValue("key_search_result", SearchResultMetadata(searchResult));
         // Note: getGeoCoordinates() may return null only for Suggestions.
-        addPoiMapMarker(searchResult.geoCoordinates!, metadata);
+        addPoiMapMarker(geoCoordinates: searchResult.geoCoordinates!, metadata: metadata, categoryName: categoryName);
+        routingExample.addRoute(
+            geoCoordinatesEnd: searchResult.geoCoordinates!,
+            geoCoordinatesStart: GeoCoordinates(28.450849311256952, 77.58427290184594),
+            color: color);
+        // _routingExample.clearMap();
       }
     });
   }
 
-  Future<void> _autoSuggestExample() async {
-    GeoCoordinates centerGeoCoordinates = _getMapViewCenter();
 
-    SearchOptions searchOptions = SearchOptions.withDefaults();
-    searchOptions.languageCode = LanguageCode.enUs;
-    searchOptions.maxItems = 5;
-
-    TextQueryArea queryArea = TextQueryArea.withCenter(centerGeoCoordinates);
-
-    // Simulate a user typing a search term.
-    _searchEngine.suggest(
-        TextQuery.withArea(
-            "p", // User typed "p".
-            queryArea),
-        searchOptions, (SearchError? searchError, List<Suggestion>? list) async {
-      _handleSuggestionResults(searchError, list);
-    });
-
-    _searchEngine.suggest(
-        TextQuery.withArea(
-            "pi", // User typed "pi".
-            queryArea),
-        searchOptions, (SearchError? searchError, List<Suggestion>? list) async {
-      _handleSuggestionResults(searchError, list);
-    });
-
-    _searchEngine.suggest(
-        TextQuery.withArea(
-            "piz", // User typed "piz".
-            queryArea),
-        searchOptions, (SearchError? searchError, List<Suggestion>? list) async {
-      _handleSuggestionResults(searchError, list);
-    });
-  }
-
-  void _handleSuggestionResults(SearchError? searchError, List<Suggestion>? list) {
-    if (searchError != null) {
-      print("Autosuggest Error: " + searchError.toString());
-      return;
-    }
-
-    // If error is null, list is guaranteed to be not empty.
-    int listLength = list!.length;
-    print("Autosuggest results: $listLength.");
-
-    for (Suggestion autosuggestResult in list) {
-      String addressText = "Not a place.";
-      Place? place = autosuggestResult.place;
-      if (place != null) {
-        addressText = place.address.addressText;
-      }
-
-      print("Autosuggest result: " + autosuggestResult.title + " addressText: " + addressText);
-    }
-  }
-
-  Future<void> _geocodeAddressAtLocation(String queryString, GeoCoordinates geoCoordinates) async {
-    _clearMap();
-
-    AddressQuery query = AddressQuery.withAreaCenter(queryString, geoCoordinates);
-
-    SearchOptions searchOptions = SearchOptions.withDefaults();
-    searchOptions.languageCode = LanguageCode.deDe;
-    searchOptions.maxItems = 30;
-
-    _searchEngine.searchByAddress(query, searchOptions, (SearchError? searchError, List<Place>? list) async {
-      if (searchError != null) {
-        _showDialog("Geocoding", "Error: " + searchError.toString());
-        return;
-      }
-
-      String locationDetails = "";
-
-      // If error is null, list is guaranteed to be not empty.
-      for (Place geocodingResult in list!) {
-        // Note: getGeoCoordinates() may return null only for Suggestions.
-        GeoCoordinates geoCoordinates = geocodingResult.geoCoordinates!;
-        Address address = geocodingResult.address;
-        locationDetails = address.addressText +
-            ". GeoCoordinates: " +
-            geoCoordinates.latitude.toString() +
-            ", " +
-            geoCoordinates.longitude.toString();
-
-        print("GeocodingResult: " + locationDetails);
-        _addPoiMapMarker(geoCoordinates);
-      }
-
-      int itemsCount = list.length;
-      _showDialog("Geocoding result: $itemsCount", locationDetails);
-    });
-  }
-
-  Future<MapMarker> _addPoiMapMarker(GeoCoordinates geoCoordinates) async {
+  Future<MapMarker> _addPoiMapMarker({required GeoCoordinates geoCoordinates, String? categoryName}) async {
     // Reuse existing MapImage for new map markers.
     if (_poiMapImage == null) {
-      Uint8List imagePixelData = await _loadFileAsUint8List('poi.png');
+      print('$categoryName');
+      Uint8List imagePixelData = await _loadFileAsUint8List(fileName: '$categoryName.png');
       _poiMapImage = MapImage.withPixelDataAndImageFormat(imagePixelData, ImageFormat.png);
     }
 
@@ -298,20 +177,22 @@ class SearchExample {
     return mapMarker;
   }
 
-  Future<Uint8List> _loadFileAsUint8List(String fileName) async {
+  Future<Uint8List> _loadFileAsUint8List({required String fileName}) async {
     // The path refers to the assets directory as specified in pubspec.yaml.
-    ByteData fileData = await rootBundle.load('assets/' + fileName);
+    print('assets/markers/$fileName');
+    ByteData fileData = await rootBundle.load('assets/markers/$fileName');
     return Uint8List.view(fileData.buffer);
   }
 
-  Future<void> addPoiMapMarker(GeoCoordinates geoCoordinates, Metadata metadata) async {
-    MapMarker mapMarker = await _addPoiMapMarker(geoCoordinates);
+  Future<void> addPoiMapMarker(
+      {required GeoCoordinates geoCoordinates, required Metadata metadata, String? categoryName}) async {
+    MapMarker mapMarker = await _addPoiMapMarker(geoCoordinates: geoCoordinates, categoryName: categoryName);
     mapMarker.metadata = metadata;
   }
 
-  GeoCoordinates _getMapViewCenter() {
-    return _camera.state.targetCoordinates;
-  }
+  // GeoCoordinates _getMapViewCenter() {
+  //   return _camera.state.targetCoordinates;
+  // }
 
   GeoBox _getMapViewGeoBox() {
     GeoBox? geoBox = _camera.boundingBox;
@@ -328,9 +209,9 @@ class SearchExample {
   }
 
   void _clearMap() {
-    _mapMarkerList.forEach((mapMarker) {
+    for (var mapMarker in _mapMarkerList) {
       _hereMapController.mapScene.removeMapMarker(mapMarker);
-    });
+    }
     _mapMarkerList.clear();
   }
 }
