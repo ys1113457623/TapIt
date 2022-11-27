@@ -144,7 +144,7 @@ class _LoginFormState extends State<LoginForm> {
                   if (states.contains(MaterialState.pressed)) {
                     return Colors.green;
                   }
-                  return Theme.of(context).canvasColor;
+                  return Color(0xffC80000);
                 })),
                 onPressed: () {
                   SearchExample? searchExample;

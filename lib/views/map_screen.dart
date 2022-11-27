@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+// import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
@@ -37,6 +38,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     drawerClicked = false;
     CheckUserConnection();
+    
     super.initState();
   }
 
@@ -219,7 +221,7 @@ class _MapScreenState extends State<MapScreen> {
                   // minChildSize: .1,
                   maxChildSize: 1,
                   builder: (BuildContext context, ScrollController scrollController) {
-                    return ActiveConnection ? bottomSheet() : bottomSheetOffline();
+                    return bottomSheet();
                   },
                 )
               : DraggableScrollableSheet(
@@ -261,13 +263,43 @@ class _MapScreenState extends State<MapScreen> {
       throw ("Cannot dial");
     }
   }
+  _textMe(String a,int number) async {
+    if (Platform.isAndroid) {
+      var uri = 'sms:+$number?body=$a';
+      var encoded = Uri.encodeFull(uri);
+      await launch(encoded);
+    } else if (Platform.isIOS) {
+      // iOS
+      var uri = 'sms:$number&body=$a';
+      var encoded = Uri.encodeFull(uri);
+      await launch(encoded);
+    }
+  }
+  
+  Widget emergency_button(String image, String Name,) {
+    String name = "Pranay Kumar";
+    String phoneNumber = "8384071324";
+    String bloodGroup = "B+" ;
+    int Age = 38;
 
-  Widget emergency_button(String image, String Name) {
     return GestureDetector(
       onTap: () async {
+        print(controller.lat.value);
+        
         if (Name == "Ambulance") {
-          // final call = Uri.parse('tel:+91 9830268966');
-          launch('sms:112?body=Hi Welcome to our city');
+            
+            await _textMe("I Urgently Need An $Name\nName:$name\nAge:$Age\nPhone Number:$phoneNumber\nMy Location:${controller.address.value}",110);
+          // _callNumber("+91 8384055155");
+        }
+        if (Name == "Fire") {
+            
+            await _textMe("I Urgently Need An ${Name} Truck\nName:$name\nPhone Number:$phoneNumber Location:${controller.address.value}",102);
+          // _callNumber("+91 8384055155");
+        }
+        if (Name == "Police") {
+            
+            await _textMe("I Urgently Need An $Name My Name is $name My Phone Number Is $phoneNumber And My Location Is ${controller.address.value}",100);
+          // _callNumber("+91 8384055155");
         }
       },
       child: Container(
@@ -299,68 +331,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Widget bottomSheetOffline() {
-    return Container(
-      height: 287.h,
-      width: double.infinity,
-      // color: Colors.black,
-      decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(50.sp), topRight: Radius.circular(50.sp))),
-      child: Padding(
-        padding: EdgeInsets.all(20.sp),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  logoUnderheadDark,
-                  height: 52.48.h,
-                )
-              ],
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                emergency_button(ambulanceLogo, "Ambulance"),
-                emergency_button(fireLogo, "Fire"),
-                emergency_button(policeLogo, "Police"),
-              ],
-              // emergency_button(ambulanceLogo,"Ambulance");
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            ElevatedButton(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.green;
-                  }
-                  return Theme.of(context).primaryColor;
-                })),
-                onPressed: () async {
-                  setState(() {
-                    if (count % 2 == 0) {
-                      height = 0.4;
-                    } else {
-                      height = 0.6;
-                    }
-
-                    count++;
-                  });
-                },
-                child: const Text("Other Emergency"))
-          ],
-        ),
-      ),
-    );
-  }
+ 
 
   Widget bottomSheet() {
     return Container(
@@ -504,6 +475,9 @@ class _MapScreenState extends State<MapScreen> {
 
         _addLocationIndicator(GeoCoordinates(controller.lat.value, controller.long.value),
             LocationIndicatorIndicatorStyle.navigation, hereMapController);
+
+        _searchExample?.getAddressForCoordinates(GeoCoordinates(controller.lat.value, controller.long.value));    
+            
         hereMapController.mapScene.enableFeatures({MapFeatures.trafficFlow: MapFeatureModes.trafficFlowWithFreeFlow});
         hereMapController.mapScene.enableFeatures({MapFeatures.extrudedBuildings: MapFeatureModes.defaultMode});
         hereMapController.mapScene.enableFeatures({MapFeatures.buildingFootprints: MapFeatureModes.defaultMode});

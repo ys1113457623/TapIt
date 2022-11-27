@@ -68,11 +68,29 @@ class SearchExample {
     _searching();
   }
 
+
   // Future<void> geocodeAnAddressButtonClicked() async {
   //   // Search for the location that belongs to an address and show it on the map.
   //   _geocodeAnAddress();
   // }
+  Future<void> getAddressForCoordinates(GeoCoordinates geoCoordinates) async {
+  SearchOptions reverseGeocodingOptions = SearchOptions.withDefaults();
+  reverseGeocodingOptions.languageCode = LanguageCode.enGb;
+  reverseGeocodingOptions.maxItems = 1;
 
+  _searchEngine.searchByCoordinates(geoCoordinates, reverseGeocodingOptions,
+      (SearchError? searchError, List<Place>? list) async {
+    if (searchError != null) {
+      _showDialog("Reverse geocoding", "Error: $searchError");
+      return;
+    }
+
+    // If error is null, list is guaranteed to be not empty.
+    // _showDialog("Reverse geocoded address:", list!.first.address.addressText);
+    controller.updateAddress(list!.first.address.addressText);
+  });
+    
+}
   void _searching() {
     String hospitalSearchTerm = "Hospital";
     String policeSearchTerm = "Police";
