@@ -42,9 +42,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-/plugins
+
 /ios
 /android
 /linux
 /macos
 env.dart
+/plugins
