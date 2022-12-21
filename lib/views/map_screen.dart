@@ -190,10 +190,11 @@ class _MapScreenState extends State<MapScreen> {
             decoration: const BoxDecoration(color: Colors.black, borderRadius: BorderRadius.all(Radius.circular(40))),
             child: GestureDetector(
                 onTap: (() {
+
                   _scaffoldKey.currentState?.openDrawer();
                 }),
                 child: Icon(
-                  Icons.navigate_before,
+                   Icons.navigate_next,
                   color: Colors.white,
                   size: 40.sp,
                 )),
@@ -205,11 +206,16 @@ class _MapScreenState extends State<MapScreen> {
         children: [
           LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              return SizedBox(
-                  height: constraints.maxHeight / 1.5,
-                  child: HereMap(
-                    onMapCreated: _onMapCreated,
-                  ));
+              return GestureDetector(
+                onTap: (() {
+                  height = 0.4;
+                }),
+                child: SizedBox(
+                    height: constraints.maxHeight / 1.5,
+                    child: HereMap(
+                      onMapCreated: _onMapCreated,
+                    )),
+              );
             },
           ),
 

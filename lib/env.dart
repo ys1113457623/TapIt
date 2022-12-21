@@ -1,4 +1,4 @@
 class Secrets {
-  String accessKeyId = "1vuNE6Ee6FC61K7exd8Byw";
-  String accessKeySecret = "RENwj6Fv4o3v0zr5yQ6OxchiuqXA1NTgrUmhLWTDI9Q2ltg_BwUqn1oNTH4SgYHeslqOKm7qV63MzPuVNdsR4g";
+  String accessKeyId = "W5kAArx54lZwNR4fHSqUtw";
+  String accessKeySecret = "9fXpWyoo0ffvEUwtTp1-pFZU1L3V_XB66wnwPb_hmgkRv4t2QXxUGi7-dRonTJAANu8d1muZbdMEo34suX7VtQ";
 }
